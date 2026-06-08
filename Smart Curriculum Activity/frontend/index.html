@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Curriculum Activity & Attendance Management</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <i class="fa-solid fa-graduation-cap logo-icon"></i>
+                    <h2>EduSmart</h2>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu" id="sidebar-nav-container">
+                <!-- Dynamically built via JavaScript based on active role -->
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile-card">
+                    <div class="avatar" id="user-avatar-initial">U</div>
+                    <div class="user-info" style="flex: 1;">
+                        <h4 id="user-display-name">Username</h4>
+                        <span id="user-display-role">Role</span>
+                    </div>
+                    <button class="logout-btn-card" id="card-logout-btn" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT CONTAINER -->
+        <main class="main-content">
+            
+            <!-- HEADER -->
+            <header class="app-header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p class="subtitle" id="page-subtitle">Welcome back to your curriculum hub</p>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-actions">
+                        <div class="action-btn notification-btn" id="notif-bell">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="badge" id="notif-count">3</span>
+                            <div class="dropdown-menu notif-dropdown" id="notif-dropdown">
+                                <h3>Notifications</h3>
+                                <div class="notif-list" id="notif-list">
+                                    <!-- Dynamic alerts -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="action-btn logout-btn" id="logout-btn" title="Logout">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- VIEW PANELS -->
+            <div class="view-panel-container">
+                
+                <!-- 1. DASHBOARD VIEW -->
+                <section id="tab-dashboard" class="tab-panel active">
+                    
+                    <!-- Stats Grid -->
+                    <div class="stats-grid" id="stats-grid-container">
+                        <!-- Dynamic stats cards based on role -->
+                    </div>
+                    
+                    <!-- Main Dashboard Body -->
+                    <div class="dashboard-body">
+                        <!-- Left column: Charts & Visuals -->
+                        <div class="dashboard-left">
+                            <div class="card chart-card">
+                                <div class="card-header">
+                                    <h3>Performance & Analytics</h3>
+                                    <span class="time-range">All semesters</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="dashboard-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right column: Deadlines & Quick actions -->
+                        <div class="dashboard-right">
+                            <div class="card mini-card" id="ai-suggestion-box">
+                                <div class="card-header borderless">
+                                    <h3 class="ai-title"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Academic Advisor</h3>
+                                </div>
+                                <div class="card-body ai-body">
+                                    <p id="ai-insight-text">Analyzing your academic footprint...</p>
+                                    <div class="ai-score-badge" id="ai-grade-badge">Predicted Grade: --</div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mini-card" id="dashboard-list-card">
+                                <div class="card-header">
+                                    <h3 id="dashboard-list-title">Upcoming Deadlines</h3>
+                                </div>
+                                <div class="card-body scrollable-y" id="dashboard-list-items">
+                                    <!-- Dynamic deadlines, completions, or tasks -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. SMART ATTENDANCE VIEW -->
+                <section id="tab-attendance" class="tab-panel">
+                    
+                    <!-- STUDENT ATTENDANCE SECTION -->
+                    <div id="student-attendance-view" class="attendance-container">
+                        <div class="attendance-options">
+                            <button class="att-method-btn active" data-method="qr-scan">
+                                <i class="fa-solid fa-qrcode"></i> QR Attendance
+                            </button>
+                            <button class="att-method-btn" data-method="face-recognition">
+                                <i class="fa-solid fa-face-smile"></i> Face Verification
+                            </button>
+                            <button class="att-method-btn" data-method="gps-verify">
+                                <i class="fa-solid fa-location-dot"></i> GPS Proximity
+                            </button>
+                        </div>
+                        
+                        <div class="method-card-container">
+                            <!-- A. QR Scan Panel -->
+                            <div class="card method-card active" id="method-qr-scan">
+                                <div class="method-header">
+                                    <h3>QR Code Attendance Check-In</h3>
+                                    <p>Present this unique check-in code to the class scanner or scan the lecture room QR.</p>
+                                </div>
+                                <div class="method-body qr-body">
+                                    <div class="qr-code-wrapper">
+                                        <!-- Real HTML/CSS generated QR box -->
+                                        <div class="qr-mock-code" id="student-qr-code">
+                                            <div class="qr-square qr-top-left"></div>
+                                            <div class="qr-square qr-top-right"></div>
+                                            <div class="qr-square qr-bottom-left"></div>
+                                            <div class="qr-center-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+                                            <div class="qr-dots-pattern"></div>
+                                        </div>
+                                        <div class="qr-timer">Expires in <span id="qr-countdown">10s</span></div>
+                                    </div>
+                                    <div class="qr-info">
+                                        <label for="attendance-subject-select">Select Class Session:</label>
+                                        <select id="attendance-subject-select" class="theme-select"></select>
+                                        <button class="btn btn-primary" id="btn-simulate-qr-checkin">
+                                            <i class="fa-solid fa-mobile-screen-button"></i> Simulate Scanning QR
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- B. Face Recognition Panel -->
+                            <div class="card method-card" id="method-face-recognition">
+                                <div class="method-header">
+                                    <h3>AI Facial Recognition Check-In</h3>
+                                    <p>Position your face in the camera frame to verify identity and log attendance.</p>
+                                </div>
+                                <div class="method-body face-body">
+                                    <div class="camera-stream-wrapper">
+                                        <!-- Simulated Live Feed -->
+                                        <video id="camera-feed" autoplay playsinline muted></video>
+                                        <canvas id="camera-overlay"></canvas>
+                                        
+                                        <div class="camera-placeholder" id="camera-placeholder">
+                                            <i class="fa-solid fa-camera camera-icon"></i>
+                                            <button class="btn btn-secondary" id="btn-start-camera">Enable Webcam Feed</button>
+                                        </div>
+                                        
+                                        <div class="scanning-hud" id="scanning-hud" style="display:none;">
+                                            <div class="scanning-reticle"></div>
+                                            <div class="scanning-bar"></div>
+                                            <div class="scanning-status" id="scanning-status-text">Detecting Face...</div>
+                                        </div>
+                                    </div>
+                                    <div class="face-actions">
+                                        <button class="btn btn-primary" id="btn-trigger-face-scan" disabled>
+                                            <i class="fa-solid fa-expand"></i> Verify Identity
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- C. GPS Proximity Panel -->
+                            <div class="card method-card" id="method-gps-verify">
+                                <div class="method-header">
+                                    <h3>GPS Geo-Fence Check-In</h3>
+                                    <p>Logs your attendance by matching your phone's coordinates to the class location.</p>
+                                </div>
+                                <div class="method-body gps-body">
+                                    <div class="gps-layout">
+                                        <div class="map-mockup">
+                                            <!-- Interactive SVG Map -->
+                                            <svg viewBox="0 0 400 250" class="svg-map">
+                                                <defs>
+                                                    <radialGradient id="fence-grad" cx="50%" cy="50%" r="50%">
+                                                        <stop offset="0%" stop-color="var(--primary-glow)" stop-opacity="0.3"/>
+                                                        <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+                                                    </radialGradient>
+                                                </defs>
+                                                <!-- Roads -->
+                                                <rect width="400" height="250" fill="#131929"/>
+                                                <path d="M 0,125 L 400,125 M 200,0 L 200,250" stroke="#1d273f" stroke-width="20" fill="none"/>
+                                                <!-- Classroom Center -->
+                                                <circle cx="200" cy="125" r="70" fill="url(#fence-grad)" stroke="var(--primary)" stroke-dasharray="5,5"/>
+                                                <circle cx="200" cy="125" r="6" fill="var(--primary)"/>
+                                                <text x="200" y="110" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">Classroom Gate A</text>
+                                                
+                                                <!-- Student Pin -->
+                                                <g id="student-map-pin" transform="translate(150, 90)">
+                                                    <circle cx="0" cy="0" r="15" fill="var(--secondary-glow)" opacity="0.6"/>
+                                                    <path d="M-5,-10 L5,-10 L0,5 Z" fill="var(--secondary)"/>
+                                                    <circle cx="0" cy="-10" r="4" fill="#fff"/>
+                                                </g>
+                                            </svg>
+                                            <div class="gps-stats">
+                                                <div><strong>Target Coordinates:</strong> 12.9716° N, 77.5946° E</div>
+                                                <div><strong>Your Coordinates:</strong> <span id="student-gps-coords">Detecting...</span></div>
+                                                <div><strong>Geofence Status:</strong> <span class="badge" id="gps-status-badge">Unknown</span></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="gps-options-panel">
+                                            <div class="dev-gps-spoof">
+                                                <h4><i class="fa-solid fa-screwdriver-wrench"></i> Proximity Spoofer (Demo Only)</h4>
+                                                <p>Force coordinates matching or outside to test geofence validation rules.</p>
+                                                <div class="radio-group">
+                                                    <label><input type="radio" name="gps-spoof" value="inside" checked> Inside (10m away)</label>
+                                                    <label><input type="radio" name="gps-spoof" value="outside"> Outside (850m away)</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <button class="btn btn-primary btn-block" id="btn-trigger-gps-checkin">
+                                                <i class="fa-solid fa-location-crosshairs"></i> Validate Geolocation & Mark Present
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- FACULTY ATTENDANCE SECTION -->
+                    <div id="faculty-attendance-view" class="attendance-container" style="display:none;">
+                        <div class="faculty-att-layout">
+                            <!-- Left: Generate QR Session -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Generate Class QR Code</h3>
+                                </div>
+                                <div class="card-body center-content">
+                                    <div class="qr-generator-wrapper">
+                                        <div class="qr-mock-code large" id="faculty-generated-qr">
+                                            <div class="qr-square qr-top-left"></div>
+                                            <div class="qr-square qr-top-right"></div>
+                                            <div class="qr-bottom-left qr-square"></div>
+                                            <div class="qr-center-logo"><i class="fa-solid fa-wifi"></i></div>
+                                            <div class="qr-dots-pattern"></div>
+                                        </div>
+                                        <div class="qr-timer-bar-container">
+                                            <div class="qr-timer-bar" id="qr-session-timer-bar"></div>
+                                        </div>
+                                        <div class="qr-meta">
+                                            <label for="faculty-subject-att-select">Session Subject:</label>
+                                            <select id="faculty-subject-att-select" class="theme-select"></select>
+                                            <button class="btn btn-primary" id="btn-faculty-start-qr">
+                                                <i class="fa-solid fa-rotate"></i> Refresh QR Code
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right: Attendance Logs List -->
+                            <div class="card scrollable-card">
+                                <div class="card-header">
+                                    <h3>Mark Manual / Review Logs</h3>
+                                    <div class="header-actions">
+                                        <button class="btn btn-small" id="btn-refresh-att-logs"><i class="fa-solid fa-arrows-rotate"></i></button>
+                                    </div>
+                                </div>
+                                <div class="card-body scrollable-y">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Student</th>
+                                                <th>Course</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Method</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="faculty-att-log-rows">
+                                            <!-- Dynamic database log lists -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. CURRICULUM SYLLABUS VIEW -->
+                <section id="tab-curriculum" class="tab-panel">
+                    <div class="curriculum-layout">
+                        <!-- Left: Syllabus Summary list -->
+                        <div class="curriculum-left">
+                            <div class="card full-height">
+                                <div class="card-header">
+                                    <h3>Syllabus Subjects & Progress</h3>
+                                </div>
+                                <div class="card-body scrollable-y" id="curriculum-subject-list">
+                                    <!-- List of courses and completion percentages -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right: Syllabus Detailed Topics checklist -->
+                        <div class="curriculum-right">
+                            <div class="card full-height">
+                                <div class="card-header">
+                                    <h3 id="curriculum-detail-title">Select a Subject</h3>
+                                </div>
+                                <div class="card-body scrollable-y" id="curriculum-detail-topics">
+                                    <div class="empty-state">
+                                        <i class="fa-solid fa-book-open"></i>
+                                        <p>Select a subject on the left to review unit progress and complete syllabus tracking.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. ASSIGNMENTS VIEW -->
+                <section id="tab-assignments" class="tab-panel">
+                    
+                    <!-- Student assignments workspace -->
+                    <div id="student-assignments-view">
+                        <div class="assignments-grid">
+                            <!-- Left: List of assignments -->
+                            <div class="card scrollable-card">
+                                <div class="card-header">
+                                    <h3>Academic Assignments</h3>
+                                </div>
+                                <div class="card-body scrollable-y" id="student-assignments-list">
+                                    <!-- Dynamic assignments list -->
+                                </div>
+                            </div>
+                            
+                            <!-- Right: Assignment Workspace (uploader / grading details) -->
+                            <div class="card" id="assignment-workspace-card">
+                                <div class="card-header">
+                                    <h3 id="assign-work-title">Workspace</h3>
+                                </div>
+                                <div class="card-body" id="assign-work-body">
+                                    <div class="empty-state">
+                                        <i class="fa-solid fa-laptop-code"></i>
+                                        <p>Select an assignment on the left to submit solutions or view teacher feedback and marks.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Faculty grading panel -->
+                    <div id="faculty-assignments-view" style="display:none;">
+                        <div class="assignments-faculty-layout">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Create Assignment</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form id="create-assignment-form" class="theme-form">
+                                        <div class="form-group">
+                                            <label for="create-assign-subject">Subject:</label>
+                                            <select id="create-assign-subject" class="theme-select" required></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="create-assign-title">Title:</label>
+                                            <input type="text" id="create-assign-title" class="theme-input" placeholder="e.g. Logic Proofs Assignment" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="create-assign-desc">Description:</label>
+                                            <textarea id="create-assign-desc" class="theme-textarea" placeholder="Detail submission criteria..."></textarea>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="create-assign-due">Due Date:</label>
+                                                <input type="date" id="create-assign-due" class="theme-input" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="create-assign-marks">Max Marks:</label>
+                                                <input type="number" id="create-assign-marks" class="theme-input" value="100" min="1" required>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-block">Publish Assignment</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="card scrollable-card">
+                                <div class="card-header">
+                                    <h3>Student Submissions Grading</h3>
+                                </div>
+                                <div class="card-body scrollable-y">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Student</th>
+                                                <th>Course</th>
+                                                <th>Submitted File</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="faculty-grading-submissions-rows">
+                                            <!-- Submissions to grade -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. ACTIVITY HUB VIEW -->
+                <section id="tab-activities" class="tab-panel">
+                    <div class="activities-layout">
+                        <!-- Left: List of extracurriculars, workshops -->
+                        <div class="activities-left">
+                            <div class="card full-height">
+                                <div class="card-header">
+                                    <h3>Campus Extracurricular Activities</h3>
+                                </div>
+                                <div class="card-body scrollable-y" id="activities-listings-container">
+                                    <!-- Dynamic activities listing -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right: Certifications tracking -->
+                        <div class="activities-right">
+                            <div class="card full-height" id="activity-certifications-card">
+                                <div class="card-header">
+                                    <h3 id="activities-right-title">Registrations & Certifications</h3>
+                                </div>
+                                <div class="card-body scrollable-y" id="activity-registrations-container">
+                                    <!-- Dynamic verification files or uploader -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. AI INSIGHTS & FORECASTS VIEW (ADMIN/FACULTY ONLY) -->
+                <section id="tab-ai-predictions" class="tab-panel">
+                    <div class="card full-width">
+                        <div class="card-header">
+                            <h3>Predictive Risk & Academic Failure Analytics</h3>
+                            <div class="header-actions">
+                                <button class="btn btn-small" id="btn-retrigger-ml-load">
+                                    <i class="fa-solid fa-arrows-rotate"></i> Reload ML Forecasts
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body scrollable-y">
+                            <p class="description-para">
+                                This dashboard runs linear and logistic regression equations on student engagement metrics (attendance, homework consistency, score bounds, activity records) to flag students at danger of course failure or attendance drops.
+                            </p>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Attendance %</th>
+                                        <th>Submissions Ratio</th>
+                                        <th>Avg Assignment Score</th>
+                                        <th>Attendance Risk</th>
+                                        <th>Risk Prob</th>
+                                        <th>Predicted Grade</th>
+                                        <th>AI Advisor Recommendation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ml-predictions-table-rows">
+                                    <!-- AI predictions list -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 7. ADMIN MANAGE USERS VIEW -->
+                <section id="tab-admin-users" class="tab-panel">
+                    <div class="card full-width">
+                        <div class="card-header">
+                            <h3>Manage Students & Staff</h3>
+                            <button class="btn btn-primary btn-small" id="btn-open-create-user-modal">
+                                <i class="fa-solid fa-user-plus"></i> Add New User
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="user-management-actions">
+                                <div class="search-input-wrapper">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="admin-user-search" class="search-input" placeholder="Search by name, username, email...">
+                                </div>
+                            </div>
+                            <div class="scrollable-y" style="max-height: 500px;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Username</th>
+                                            <th>Role</th>
+                                            <th>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-users-table-rows">
+                                        <!-- Dynamic rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. ADMIN MONITOR CURRICULUM VIEW -->
+                <section id="tab-admin-curriculum" class="tab-panel">
+                    <div class="card full-width">
+                        <div class="card-header">
+                            <h3>System-Wide Curriculum Completion</h3>
+                            <span class="time-range">All Active Subjects</span>
+                        </div>
+                        <div class="card-body scrollable-y" style="max-height: 550px;">
+                            <p class="description-para" style="margin-bottom: 15px; font-size: 13px; color: var(--text-muted);">
+                                Track syllabus completion metrics and milestones for all registered curriculum subjects and mapped instructors.
+                            </p>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject Code</th>
+                                        <th>Subject Name</th>
+                                        <th>Instructor</th>
+                                        <th>Completed Units</th>
+                                        <th>Progress Bar</th>
+                                        <th>Completion Ratio</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-curriculum-table-rows">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. ADMIN GENERATE REPORTS VIEW -->
+                <section id="tab-admin-reports" class="tab-panel">
+                    <div class="reports-layout">
+                        <!-- Left Panel: Selector -->
+                        <div class="card report-controls-card">
+                            <div class="card-header">
+                                <h3>Report Parameters</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="report-parameters-form" class="theme-form">
+                                    <div class="form-group">
+                                        <label for="report-subject-select">Select Subject:</label>
+                                        <select id="report-subject-select" class="theme-select" required></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="report-type-select">Report Type:</label>
+                                        <select id="report-type-select" class="theme-select" required>
+                                            <option value="attendance">Student Attendance Roster</option>
+                                            <option value="curriculum">Curriculum Completion Details</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        <i class="fa-solid fa-file-invoice"></i> Compile Report
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Document Preview -->
+                        <div class="card report-preview-card">
+                            <div class="card-header">
+                                <h3>Report Document Preview</h3>
+                                <div class="header-actions">
+                                    <button class="btn btn-secondary btn-small" id="btn-print-report" disabled>
+                                        <i class="fa-solid fa-print"></i> Print / Export PDF
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body report-preview-body scrollable-y">
+                                <div id="report-preview-empty" class="empty-state">
+                                    <i class="fa-solid fa-file-lines"></i>
+                                    <p>Select report parameters and compile to preview document.</p>
+                                </div>
+                                <div id="report-document-to-print" class="report-document" style="display: none;">
+                                    <!-- Dynamic PDF printable document -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+            
+            <!-- AI CHATBOT INTEGRATED SLIDE DRAWER -->
+            <div class="chatbot-floating-trigger" id="chatbot-trigger">
+                <i class="fa-solid fa-message"></i>
+                <span class="tooltip">Curriculum AI Chatbot</span>
+            </div>
+            
+            <div class="chatbot-drawer" id="chatbot-drawer">
+                <div class="chat-header">
+                    <div class="chat-title-area">
+                        <i class="fa-solid fa-brain chat-icon"></i>
+                        <div>
+                            <h4>Curriculum AI</h4>
+                            <span>Active Assistant</span>
+                        </div>
+                    </div>
+                    <button class="chat-close-btn" id="chat-close"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="chat-body" id="chat-conversation-area">
+                    <div class="chat-message bot-msg">
+                        <p>Hi John! I am your smart academic chatbot. Ask me about your attendance, homeworks, predicted score, or upcoming campus events!</p>
+                    </div>
+                </div>
+                
+                <div class="chat-suggestions" id="chat-quick-suggestions">
+                    <!-- Quick question chips -->
+                    <button class="chip-btn" data-query="What is my attendance?">My Attendance</button>
+                    <button class="chip-btn" data-query="Which assignments are pending?">Pending Homework</button>
+                    <button class="chip-btn" data-query="Predict my final grade">Grade Forecast</button>
+                </div>
+                
+                <div class="chat-footer">
+                    <input type="text" id="chat-input" placeholder="Type an academic query...">
+                    <button id="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL POPUPS -->
+    <!-- Faculty grading submission modal -->
+    <div class="modal-overlay" id="grading-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Grade Homework Submission</h3>
+                <button class="close-modal-btn" onclick="closeGradingModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="submission-details">
+                    <p><strong>Student:</strong> <span id="grade-modal-student">--</span></p>
+                    <p><strong>Course:</strong> <span id="grade-modal-course">--</span></p>
+                    <p><strong>Attachment:</strong> <a href="#" id="grade-modal-file" class="file-link" target="_blank">download_code.py</a></p>
+                </div>
+                <form id="grading-form" class="theme-form">
+                    <input type="hidden" id="grade-modal-submission-id">
+                    <div class="form-group">
+                        <label for="grade-modal-marks">Enter Marks (Max <span id="grade-modal-max-marks">100</span>):</label>
+                        <input type="number" id="grade-modal-marks" class="theme-input" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="grade-modal-feedback">Teacher Feedback:</label>
+                        <textarea id="grade-modal-feedback" class="theme-textarea" placeholder="Great efforts, code compiles successfully..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Confirm Grade & Provide Feedback</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Create User Modal -->
+    <div class="modal-overlay" id="create-user-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Add New Student / Staff Member</h3>
+                <button class="close-modal-btn" id="btn-close-create-user-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="create-user-form" class="theme-form">
+                    <div class="form-group">
+                        <label for="new-user-username">Username:</label>
+                        <input type="text" id="new-user-username" class="theme-input" placeholder="e.g. student_mary" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-user-password">Password:</label>
+                        <input type="password" id="new-user-password" class="theme-input" placeholder="e.g. temp123" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-user-name">Full Name:</label>
+                        <input type="text" id="new-user-name" class="theme-input" placeholder="e.g. Mary C. Smith" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-user-email">Email Address:</label>
+                        <input type="email" id="new-user-email" class="theme-input" placeholder="e.g. mary.smith@smartcurriculum.edu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-user-role">Portal Role:</label>
+                        <select id="new-user-role" class="theme-select" required>
+                            <option value="student">Student</option>
+                            <option value="faculty">Faculty / Instructor</option>
+                            <option value="admin">System Administrator</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Register User Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- PREMIUM ROLE-BASED LOGIN PORTAL SCREEN -->
+    <div id="login-portal-container" class="portal-student">
+        <div class="login-card-wrapper">
+            <div class="login-glass-card">
+                <div class="login-header">
+                    <div class="login-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <h2>EduSmart Portal</h2>
+                    <p>Enter credentials to access curriculum services</p>
+                </div>
+
+                <!-- File protocol warning banner -->
+                <div id="file-protocol-warning" style="display: none; background: rgba(255, 82, 82, 0.15); border: 1px solid var(--danger); padding: 12px; border-radius: 12px; margin-bottom: 5px; font-size: 12px; color: var(--text-main); text-align: center; line-height: 1.4;">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger); margin-right: 6px;"></i>
+                    <strong>Warning:</strong> You opened index.html directly from files. <br>
+                    Please access the application at <a href="http://127.0.0.1:5000/" style="color: var(--secondary); text-decoration: underline; font-weight: bold;">http://127.0.0.1:5000/</a>
+                </div>
+
+                <div class="portal-selector">
+                    <button class="portal-tab-btn active" data-role="student">
+                        <i class="fa-solid fa-user-graduate"></i> Student
+                    </button>
+                    <button class="portal-tab-btn" data-role="faculty">
+                        <i class="fa-solid fa-chalkboard-user"></i> Faculty
+                    </button>
+                    <button class="portal-tab-btn" data-role="admin">
+                        <i class="fa-solid fa-user-shield"></i> Admin
+                    </button>
+                </div>
+
+                <form id="login-form-element" class="login-form">
+                    <div class="input-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" class="login-input" placeholder="e.g. student_bob" required>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="login-input" placeholder="••••••••" required>
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <button type="submit" class="btn btn-primary login-btn">Sign In</button>
+                </form>
+
+                <!-- Quick login for testing -->
+                <div class="demo-accounts-panel">
+                    <h4><i class="fa-solid fa-flask"></i> Quick Demo Logins</h4>
+                    <div class="demo-chips" id="demo-login-chips">
+                        <!-- Filled dynamically based on role tab -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FontAwesome and JS modules -->
+    <!-- Custom scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
